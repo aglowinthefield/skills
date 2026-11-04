@@ -4,8 +4,10 @@ Agent skills by aglowinthefield, in plain [Agent Skills](https://agentskills.io)
 
 | Skill | What it does |
 | --- | --- |
+| [`nitpick`](skills/nitpick/SKILL.md) | Loads a page or component into a hot-reloading preview, then treats each message as one small design tweak, one commit per tweak. |
 | [`walk`](skills/walk/SKILL.md) | Walks a list of action items one at a time instead of ending a reply with nine bullets. Each item ends as do now, fork, defer, or drop. |
 | [`ykwim`](skills/ykwim/SKILL.md) | End a request with "ykwim?" and the agent restates what it thinks you mean, lists ambiguities with a recommended answer for each, and waits for your go-ahead. |
+| [`wrap-up`](skills/wrap-up/SKILL.md) | Before you close a session, sweeps it for loose ends (unpushed work, open decisions, facts worth saving) and asks which to finish, export, or drop. Run it as `/wrap-up`. |
 
 ## Install
 
@@ -25,8 +27,7 @@ Or clone and symlink:
 
 ```bash
 git clone git@github.com:aglowinthefield/skills.git ~/code/skills
-ln -s ~/code/skills/skills/walk ~/.agents/skills/walk
-ln -s ~/code/skills/skills/ykwim ~/.agents/skills/ykwim
+for s in nitpick walk wrap-up ykwim; do ln -s ~/code/skills/skills/$s ~/.agents/skills/$s; done
 ```
 
 ## walk
