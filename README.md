@@ -30,6 +30,14 @@ git clone git@github.com:aglowinthefield/skills.git ~/code/skills
 for s in nitpick walk wrap-up ykwim; do ln -s ~/code/skills/skills/$s ~/.agents/skills/$s; done
 ```
 
+## nitpick
+
+Say "/nitpick <thing>" or "design pass on X". The agent finds the files for a page, component, route, or stylesheet, and starts a preview with hot reload. With no target, it uses the whole project.
+
+It picks the first surface that works: the repo's dev server, an existing Storybook story, a throwaway scratch route, a static file under a reload server, or edit and screenshot. Work happens in a separate worktree.
+
+After that, each message is one small tweak, such as "more padding" or "the gray is too warm". The agent makes the smallest edit, commits it, and replies with the `file:line` and the before and after values. "undo" or "back N" reverts tweaks, and "compare" shows the diff. "done" stops the server and squashes the commits.
+
 ## walk
 
 When a reply would end in several action items, the agent turns them into a ledger and asks about one item per turn:
@@ -50,3 +58,19 @@ State lives outside any repo, in `~/.agents/walk/`:
 - `preferences.md` records where bigger forks go and other standing preferences.
 
 walk is v0. Expect changes.
+
+## wrap-up
+
+Run `/wrap-up` before you close a session. The agent goes back through the conversation and checks each loose end against current state:
+
+- Unfinished work, including questions nobody answered and background tasks still running.
+- Unshipped state: uncommitted changes, unpushed commits, worktrees, draft PRs, and servers or containers it started.
+- Decisions it handed to you.
+- Earlier claims that turned out wrong.
+- Knowledge the next session needs, with a suggested home such as memory, the issue tracker, or a repo doc.
+
+It lists the items as finish now, export, or safe to drop, and asks which to act on. Commits, pushes, posts, and deletions still need your say-so. It ends with a tally of where everything went. The skill only runs when you invoke it.
+
+## ykwim
+
+End a request with "ykwim?", "you know what I mean?", "kwim?" or similar. The agent does no work yet. It restates the request in a sentence or two, lists anything ambiguous with a recommended answer for each, and waits. You can reply "yes" or "1 yes, 2 no, do X". It starts only after you confirm.
