@@ -77,7 +77,8 @@ function sectionsHtml(text) {
   return parts.map((p, i) => {
     const title = p.match(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/i)?.[1]?.replace(/<[^>]+>/g, "").trim() || "(top)";
     const line = text.slice(0, text.indexOf(p)).split("\n").length;
-    const visual = /class="[^"]*mermaid|class="mer"|<svg|<img|<!--\s*text-only:/i.test(p);
+    // data-visual marks a diagram drawn in HTML boxes rather than Mermaid or SVG.
+    const visual = /class="[^"]*mermaid|class="mer"|<svg|<img|data-visual|<!--\s*text-only:/i.test(p);
     const prose = p
       .replace(/<(pre|script|style|svg|table|details)[\s\S]*?<\/\1>/gi, "")
       .replace(/<div class="mer">[\s\S]*?<\/div>/gi, "")

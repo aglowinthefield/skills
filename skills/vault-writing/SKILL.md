@@ -24,7 +24,7 @@ A vault note is read in a pane, often days later, by someone who wants the shape
 | Plan, spec, checklist, Now page, or a note the user edits or annotates inline | native Markdown |
 | Short note (under ~400 words), or an append to an existing native note | native Markdown |
 
-vault-report lets you put cards side by side, show before and after in columns, use coloured scorecards, and keep a legend next to its diagram. It costs about the same to write. Its notes are static HTML in source mode, so the user can't edit them comfortably and CriticMarkup comments don't work inside them. Read `~/.agents/skills/vault-report/SKILL.md` before writing one. A report without `data-note` sections exports as a single note. Keep the HTML source at `~/.cache/vault-writing/sources/<note name>.html`, so a later edit can change it and export again with `--force`.
+vault-report lets you put cards side by side, show before and after in columns, use coloured scorecards, and keep a legend next to its diagram. It costs about the same to write. Its notes are static HTML in source mode, so the user can't edit them comfortably and CriticMarkup comments don't work inside them. Read `~/.agents/skills/vault-report/SKILL.md` before writing one. A report without `data-note` sections exports as a single note. Keep the HTML source at `~/.cache/vault-writing/sources/<folder, with / as _>__<note name>.html` (two notes can share a name), so a later edit can change it and export again with `--force`. The export writes vault-report's own frontmatter, so put back any properties the old note had.
 
 Both formats render the same Mermaid. Obsidian 1.15 parses every current diagram type, including `architecture-beta`, `block-beta`, `xychart-beta`, `sankey-beta`, `packet-beta`, and `radar-beta`.
 
@@ -32,7 +32,7 @@ Both formats render the same Mermaid. Obsidian 1.15 parses every current diagram
 
 1. The note opens with a lead of one or two sentences: the answer, the decision, or the blocker. **One overview diagram** comes right after it, so the whole system or finding fits on the first screen.
 2. Every section that describes how something runs, connects, fails, waits, or changes state opens with a diagram. The prose under it explains only what the diagram can't show.
-3. Budget: a section with more than 150 words of prose and no diagram or image is a bug. Draw it, cut it, or fold the detail into a collapsed callout. If it really is text-only, such as a list of open questions, put `%% text-only: <reason> %%` (Markdown) or `<!-- text-only: <reason> -->` (HTML) under its heading. `scripts/check-note.mjs` enforces this.
+3. Budget: a section with more than 150 words of prose and no diagram or image is a bug. Draw it, cut it, or fold the detail into a collapsed callout. If it really is text-only, such as a list of open questions, put `%% text-only: <reason> %%` (Markdown) or `<!-- text-only: <reason> -->` (HTML) under its heading. A diagram drawn in HTML boxes instead of Mermaid needs `data-visual` on its wrapper so the checker counts it. `scripts/check-note.mjs` enforces this.
 4. A table cell holds a value, a name, or a short phrase of 20 words or fewer. A longer cell is prose, so move it out.
 5. Methodology, sample sizes, and raw evidence go in a collapsed callout (`> [!info]- How this was measured`) or in `<details>` in HTML. The reader opens them on purpose.
 

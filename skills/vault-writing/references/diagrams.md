@@ -16,6 +16,15 @@ To colour an edge, use `linkStyle <index> stroke:#ef4444,stroke-width:2px`. Edge
 
 In vault-report HTML, use Tailwind palette hex values (`#ef4444` red-500, `#10b981` emerald-500, `#f59e0b` amber-500, `#0ea5e9` sky-500). The exporter maps them onto the theme.
 
+## Keeping diagrams inside a pane
+
+A pane is about 1,100 px wide. These are the shapes that went over it in practice, and what fixed them:
+
+- A chain of more than 4 or 5 boxes in `LR`, or a subgraph laid out `LR` inside an `LR` diagram. Switch to `TB`, or give each subgraph `direction TB` so they sit side by side as columns.
+- A `TB` node with 5 or more children in one row. Use `LR` so the children stack, or chain them in two columns with invisible links (`a --> b ~~~ c`).
+- A `sequenceDiagram` with 5 participants and long messages. Use short aliases (`Store`, `Grids`) and messages of 2 to 4 words, and put the detail in the prose.
+- A status board (what's done, what's open) as a flowchart. Use HTML chips or cards in vault-report instead. Those aren't really flows.
+
 ## Boundaries and a flaw
 
 One subgraph per boundary. The flaw sits on the node where it happens, with a marker the prose repeats.
