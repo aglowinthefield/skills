@@ -63,6 +63,9 @@ function sectionsMd(text) {
       })
       .map((l) => l.replace(/^\s*>\s*(\[![^\]]+\][+-]?)?/, ""))
       .join(" ")
+      // inline HTML (vault-report exports): count the text, not tags or SVG internals
+      .replace(/<(svg|style|details)[\s\S]*?<\/\1>/gi, "")
+      .replace(/<[^>]+>/g, " ")
       .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1");
     return { ...s, visual, words: words(prose) };
   });
@@ -70,19 +73,22 @@ function sectionsMd(text) {
 
 function sectionsHtml(text) {
   const main = text.match(/<main[\s\S]*<\/main>/i)?.[0] ?? text;
-  const parts = main.split(/(?=<h2[\s>])/i);
+  const parts = main.split(/(?=<h[23][\s>])/i);
   return parts.map((p, i) => {
-    const title = p.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i)?.[1]?.replace(/<[^>]+>/g, "").trim() || "(top)";
+    const title = p.match(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/i)?.[1]?.replace(/<[^>]+>/g, "").trim() || "(top)";
     const line = text.slice(0, text.indexOf(p)).split("\n").length;
-    const visual = /class="[^"]*mermaid|<svg|<img|<!--\s*text-only:/i.test(p);
+    const visual = /class="[^"]*mermaid|class="mer"|<svg|<img|<!--\s*text-only:/i.test(p);
     const prose = p
       .replace(/<(pre|script|style|svg|table|details)[\s\S]*?<\/\1>/gi, "")
+      .replace(/<div class="mer">[\s\S]*?<\/div>/gi, "")
       .replace(/<[^>]+>/g, " ");
     return { title, line, visual, words: words(prose) };
   });
 }
 
-const secs = isHtml ? sectionsHtml(src) : sectionsMd(src);
+// A vault-report export is HTML inside a .md file; section it like HTML.
+const exported = !isHtml && /class="vr-page/.test(src);
+const secs = isHtml || exported ? sectionsHtml(src) : sectionsMd(src);
 for (const s of secs) {
   if (s.words > WORDS && !s.visual) {
     problems.push(`line ${s.line}: section "${s.title}" has ${s.words} words of prose and no diagram or image (budget ${WORDS})`);
