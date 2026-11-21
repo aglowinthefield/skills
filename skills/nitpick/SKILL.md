@@ -31,6 +31,8 @@ Take the first option that works, and tell the user which one you picked and why
 4. **A static file under a reload server.** For plain HTML and CSS, or an exported snippet, serve the folder with `npx browser-sync start --server --files "**/*"` or `npx live-server`.
 5. **Edit and screenshot.** If nothing reloads (native app, email template, a build that takes minutes), rebuild on each tweak and take a screenshot. Say plainly that this loop is slow.
 
+If there's a companion skill named `nitpick-<project>` for the target's project (for example, one that starts a dev server against production data), follow its setup instead of section 3.
+
 ## 3. Set up
 
 1. Work in a separate worktree so the main checkout stays clean: create `.worktrees/nitpick-<slug>` on branch `nitpick/<slug>`. If you are already in a linked worktree, or the repo's instructions say otherwise, follow those instead.

@@ -34,7 +34,7 @@ The last thing you print is this tally, in a fenced code block so the columns ho
 
 ```
 ╭─ ✦ wrapped up ✦ ──────────────────────────╮
-│  📋 Issues    2   #468, #469                │
+│  🐙 Issues    2   #468, #469                │
 │  🧠 Memory    1   pr-body-hook-file-order   │
 │  📄 Repo docs 0                             │
 │  🔀 PRs       0                             │
@@ -50,4 +50,3 @@ The last thing you print is this tally, in a fenced code block so the columns ho
 - **Still open** counts the open items from your closing statement, grouped by where each now lives. **Dropped** counts the Safe to drop items.
 - Count an emoji as two columns when padding, so the right border lines up.
 - If an item still lives only in this conversation, replace the sign-off line with `⚠ N item(s) still only in this chat` and name them above the banner.
-
