@@ -7,6 +7,7 @@ Agent skills by aglowinthefield, in plain [Agent Skills](https://agentskills.io)
 | [`nitpick`](skills/nitpick/SKILL.md) | Loads a page or component into a hot-reloading preview, then treats each message as one small design tweak, one commit per tweak. |
 | [`walk`](skills/walk/SKILL.md) | Walks a list of action items one at a time instead of ending a reply with nine bullets. Each item ends as do now, fork, defer, or drop. |
 | [`ykwim`](skills/ykwim/SKILL.md) | End a request with "ykwim?" and the agent restates what it thinks you mean, lists ambiguities with a recommended answer for each, and waits for your go-ahead. |
+| [`vault-writing`](skills/vault-writing/SKILL.md) | Writes Obsidian vault notes picture-first: diagrams for processes, architectures, boundaries and flaws, with a checker that enforces a prose budget and renders every Mermaid block in Obsidian. |
 | [`wrap-up`](skills/wrap-up/SKILL.md) | Before you close a session, sweeps it for loose ends (unpushed work, open decisions, facts worth saving) and asks which to finish, export, or drop. Run it as `/wrap-up`. |
 
 ## Install
@@ -27,7 +28,7 @@ Or clone and symlink:
 
 ```bash
 git clone git@github.com:aglowinthefield/skills.git ~/code/skills
-for s in nitpick walk wrap-up ykwim; do ln -s ~/code/skills/skills/$s ~/.agents/skills/$s; done
+for s in nitpick vault-writing walk wrap-up ykwim; do ln -s ~/code/skills/skills/$s ~/.agents/skills/$s; done
 ```
 
 ## nitpick
@@ -58,6 +59,14 @@ State lives outside any repo, in `~/.agents/walk/`:
 - `preferences.md` records where bigger forks go and other standing preferences.
 
 walk is v0. Expect changes.
+
+## vault-writing
+
+The agent uses it whenever it writes a note in an Obsidian vault. The note leads with the answer and one overview diagram. Each section that describes how something runs, connects, or fails opens with a Mermaid diagram, with flaws marked in red and numbered so the prose can point at them. Reports the reader reviews go out as themed HTML through a `vault-report` exporter. Notes the reader edits stay native Markdown.
+
+`scripts/check-note.mjs` enforces the rules. It flags any section with more than 150 words of prose and no picture, and any table cell over 20 words. It renders every Mermaid block in the running Obsidian app and reports parse errors and diagrams too wide for a pane. A section can opt out with `%% text-only: <reason> %%`.
+
+The vault path, the Silk folder layout, and the `vault-report` exporter are specific to my setup. Change them in `SKILL.md` for yours.
 
 ## wrap-up
 
