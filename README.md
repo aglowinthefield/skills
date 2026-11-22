@@ -4,6 +4,7 @@ Agent skills by aglowinthefield, in plain [Agent Skills](https://agentskills.io)
 
 | Skill | What it does |
 | --- | --- |
+| [`data-hygiene`](skills/data-hygiene/SKILL.md) | Hunts stored data that breaks a rule the code assumes (unfinished backfills, rules defined twice, writes that skip the normalizer, collation traps, stale readers, identity twins), measures each on real data, and drafts one issue per finding. |
 | [`nitpick`](skills/nitpick/SKILL.md) | Loads a page or component into a hot-reloading preview, then treats each message as one small design tweak, one commit per tweak. |
 | [`walk`](skills/walk/SKILL.md) | Walks a list of action items one at a time instead of ending a reply with nine bullets. Each item ends as do now, fork, defer, or drop. |
 | [`ykwim`](skills/ykwim/SKILL.md) | End a request with "ykwim?" and the agent restates what it thinks you mean, lists ambiguities with a recommended answer for each, and waits for your go-ahead. |
@@ -29,7 +30,7 @@ Or clone and symlink:
 
 ```bash
 git clone git@github.com:aglowinthefield/skills.git ~/code/skills
-for s in nitpick vault-report vault-writing walk wrap-up ykwim; do ln -s ~/code/skills/skills/$s ~/.agents/skills/$s; done
+for s in data-hygiene nitpick vault-report vault-writing walk wrap-up ykwim; do ln -s ~/code/skills/skills/$s ~/.agents/skills/$s; done
 ```
 
 ## nitpick
