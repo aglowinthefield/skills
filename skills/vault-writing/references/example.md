@@ -13,6 +13,36 @@ Each section of the old note, and what replaced it:
 5. **Proposals.** Five proposals in 529 words became a plan flowchart. Step 1 is green, steps 2 to 4 carry the markers of the flaws they fix, and the split is grey. Five items of about 30 words each follow.
 6. **Cost.** A paragraph with the formula inline became one sentence with the $0.42 figure, six cohort chips, and the formula in a collapsed block.
 
+## One section, before and after
+
+The "What runs" section, abridged. Before, the reader rebuilds the pipeline from sentences:
+
+> The Policy check runs inside the `ci-verify` job on a GitHub-hosted runner with 4 vCPU. `ci-verify` first runs the cheap checks, format and secrets scanning, which together take about 2 seconds. It then runs the Policy suite, which takes 59 s at p50 and is most of the job. Most of that time isn't CPU work. The `sse-ramp` test waits on a loopback server and spends about 36 seconds of real time sleeping through its ramp. Once `ci-verify` passes, `ci-heavy` runs, and only then does the PR reach the merge queue, which sits outside our control.
+
+After, the diagram carries the order, the boundaries and the numbers, and the prose keeps only the cause:
+
+```mermaid
+flowchart TB
+  dev([PR push]) --> gh
+  subgraph gh["GitHub runner, 4 vCPU"]
+    direction LR
+    gate[ci-verify checks] --> fmt[format + secrets<br/>2 s]
+    fmt --> pol[Policy suite<br/>59 s p50]
+    pol --> sse["① sse-ramp test<br/>36 s real wait"]:::bad
+  end
+  subgraph ext["Outside our control"]
+    q[(merge queue)]:::ext
+  end
+  gh --> heavy{ci-heavy}
+  heavy --> q
+  classDef bad fill:#ef444426,stroke:#ef4444,stroke-width:2px
+  classDef ext fill:transparent,stroke-dasharray:4 3
+```
+
+> ① `sse-ramp` waits on a loopback server for 36 of the suite's 59 s. The time is spent waiting, so a faster runner won't help.
+
+The rewrite moves every number onto a node, puts the runner and the queue in their own boundaries, and marks the flaw where it happens. The prose shrinks to the one thing a box can't say: why the time is spent.
+
 ## What made the difference
 
 - The overview diagram puts the whole finding on the first screen: where Policy runs, and which two boxes are red.
