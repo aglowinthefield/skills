@@ -5,7 +5,7 @@
 //   node vault-report.mjs <report.html> --dest "<vault folder>" [--name "<index note>"]
 //        [--date YYYY-MM-DD] [--status needs-review] [--vault <path>] [--force]
 //   node vault-report.mjs --rebuild [--vault <path>]
-import { execFileSync, spawnSync } from 'node:child_process';
+import { execSync, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { homedir, tmpdir } from 'node:os';
@@ -26,7 +26,11 @@ for (let i = 0; i < argv.length; i++) {
   else if (a.startsWith('--')) opts[a.slice(2)] = argv[++i];
   else opts.positional.push(a);
 }
-const VAULT = resolve(opts.vault || process.env.DEV_VAULT || join(homedir(), 'Documents/somewhere.garden'));
+// Windows keeps Documents under OneDrive when folder backup is on.
+const defaultVault = () =>
+  ['Documents/somewhere.garden', 'OneDrive/Documents/somewhere.garden'].map(p => join(homedir(), p)).find(p => existsSync(p)) ||
+  join(homedir(), 'Documents/somewhere.garden');
+const VAULT = resolve(opts.vault || process.env.DEV_VAULT || defaultVault());
 if (!existsSync(join(VAULT, '.obsidian'))) die(`not an Obsidian vault: ${VAULT}`);
 
 function die(msg) {
@@ -44,7 +48,8 @@ function deps() {
     mkdirSync(DEPS, { recursive: true });
     if (!existsSync(join(DEPS, 'package.json'))) writeFileSync(join(DEPS, 'package.json'), '{"private":true}\n');
     console.log(`installing tailwindcss@3 + postcss into ${DEPS}`);
-    execFileSync('npm', ['i', '--silent', '--no-audit', '--no-fund', 'tailwindcss@3.4.19', 'postcss@8'], { cwd: DEPS, stdio: 'inherit' });
+    // Through a shell, because npm is npm.cmd on Windows and Node won't run a .cmd directly.
+    execSync('npm i --silent --no-audit --no-fund tailwindcss@3.4.19 postcss@8', { cwd: DEPS, stdio: 'inherit' });
   }
   return { postcss: req('postcss'), tailwind: req('tailwindcss'), colors: req('tailwindcss/colors') };
 }
@@ -63,20 +68,46 @@ const frontmatter = obj => ['---', ...yamlFields(obj), 'cssclasses:', '  - wide'
 
 function chrome() {
   if (process.env.CHROME) return process.env.CHROME;
-  const pw = join(homedir(), 'Library/Caches/ms-playwright');
-  if (existsSync(pw)) {
+  const local = process.env.LOCALAPPDATA || join(homedir(), 'AppData/Local');
+  // Playwright's cached Chromium first, then an installed browser.
+  for (const pw of [join(homedir(), 'Library/Caches/ms-playwright'), join(local, 'ms-playwright'), join(homedir(), '.cache/ms-playwright')]) {
+    if (!existsSync(pw)) continue;
     for (const d of readdirSync(pw).filter(d => /^chromium-\d+$/.test(d)).sort().reverse()) {
-      const base = join(pw, d, 'chrome-mac-arm64');
-      if (!existsSync(base)) continue;
-      const app = readdirSync(base).find(f => f.endsWith('.app'));
-      if (!app) continue;
-      const bin = readdirSync(join(base, app, 'Contents/MacOS'))[0];
-      if (bin) return join(base, app, 'Contents/MacOS', bin);
+      for (const p of ['chrome-win64/chrome.exe', 'chrome-win/chrome.exe', 'chrome-linux64/chrome', 'chrome-linux/chrome'])
+        if (existsSync(join(pw, d, p))) return join(pw, d, p);
+      for (const mac of ['chrome-mac-arm64', 'chrome-mac']) {
+        const base = join(pw, d, mac);
+        if (!existsSync(base)) continue;
+        const app = readdirSync(base).find(f => f.endsWith('.app'));
+        if (!app) continue;
+        const bin = readdirSync(join(base, app, 'Contents/MacOS'))[0];
+        if (bin) return join(base, app, 'Contents/MacOS', bin);
+      }
     }
   }
-  for (const p of ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/Applications/Chromium.app/Contents/MacOS/Chromium'])
+  const pf = process.env.ProgramFiles || 'C:/Program Files';
+  const pf86 = process.env['ProgramFiles(x86)'] || 'C:/Program Files (x86)';
+  for (const p of [
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/Applications/Chromium.app/Contents/MacOS/Chromium',
+    join(pf, 'Google/Chrome/Application/chrome.exe'),
+    join(pf86, 'Google/Chrome/Application/chrome.exe'),
+    join(local, 'Google/Chrome/Application/chrome.exe'),
+    join(pf86, 'Microsoft/Edge/Application/msedge.exe'),
+    join(pf, 'Microsoft/Edge/Application/msedge.exe'),
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium',
+  ])
     if (existsSync(p)) return p;
   die('no Chrome found; set $CHROME');
+}
+
+// Obsidian's CLI: obsidian-cli in the macOS app bundle, Obsidian.com beside Obsidian.exe on Windows.
+// It answers only when Settings > General > Advanced > Command line interface is on.
+function obsidianCli() {
+  const local = process.env.LOCALAPPDATA || join(homedir(), 'AppData/Local');
+  return [process.env.OBSIDIAN_CLI, '/Applications/Obsidian.app/Contents/MacOS/obsidian-cli', join(local, 'Programs/Obsidian/Obsidian.com')]
+    .find(p => p && existsSync(p));
 }
 
 // ---------- step 1: render diagrams and split the report, inside Chrome ----------
@@ -389,11 +420,11 @@ ${S} .mer svg { height: auto; }
 }
 
 function enableSnippet() {
-  const cli = '/Applications/Obsidian.app/Contents/MacOS/obsidian-cli';
+  const cli = obsidianCli();
   const appearance = join(VAULT, '.obsidian/appearance.json');
   // With the vault open, ask Obsidian: it rereads the snippets folder and saves appearance.json
   // itself (an edit from outside would be overwritten). The CLI exits 0 even on errors.
-  if (existsSync(cli)) {
+  if (cli) {
     const n = JSON.stringify(SNIPPET);
     const code = `(async () => { await app.customCss.readSnippets(); app.customCss.setCssEnabledStatus(${n}, true); return app.customCss.enabledSnippets.has(${n}) ? "vr-enabled" : "vr-missing" })()`;
     const r = spawnSync(cli, ['eval', `vault=${basename(VAULT)}`, `code=${code}`], { encoding: 'utf8', timeout: 15000 });

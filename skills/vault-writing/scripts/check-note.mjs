@@ -9,7 +9,9 @@
 // Exit 1 on any error or budget hit. Usage:
 //   check-note.mjs <file> [--words 150] [--cell 20] [--vault <name>] [--no-render]
 
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
 import { execFileSync } from "node:child_process";
 import { basename } from "node:path";
 
@@ -25,10 +27,14 @@ if (!file) {
 }
 const WORDS = Number(opt("words", 150));
 const CELL = Number(opt("cell", 20));
-const vaultPath = process.env.DEV_VAULT || `${process.env.HOME}/Documents/somewhere.garden`;
+// Windows keeps Documents under OneDrive when folder backup is on.
+const vaultPath =
+  process.env.DEV_VAULT ||
+  ["Documents/somewhere.garden", "OneDrive/Documents/somewhere.garden"].map((p) => join(homedir(), p)).find((p) => existsSync(p)) ||
+  join(homedir(), "Documents/somewhere.garden");
 const VAULT = opt("vault", basename(vaultPath));
 const isHtml = /\.html?$/i.test(file);
-const src = readFileSync(file, "utf8");
+const src = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
 const problems = [];
 const words = (s) => (s.match(/[A-Za-z0-9][\w'’.-]*/g) || []).length;
 
@@ -130,7 +136,12 @@ if (!isHtml) {
 }
 let rendered = "skipped";
 if (blocks.length && !args.includes("--no-render")) {
-  const cli = process.env.OBSIDIAN_CLI || "/Applications/Obsidian.app/Contents/MacOS/obsidian-cli";
+  // obsidian-cli in the macOS app bundle, Obsidian.com beside Obsidian.exe on Windows.
+  const local = process.env.LOCALAPPDATA || join(homedir(), "AppData/Local");
+  const cli =
+    [process.env.OBSIDIAN_CLI, "/Applications/Obsidian.app/Contents/MacOS/obsidian-cli", join(local, "Programs/Obsidian/Obsidian.com")].find(
+      (p) => p && existsSync(p),
+    ) || "obsidian-cli";
   const js = `(async()=>{
     const leaf=app.workspace.getLeavesOfType('markdown')[0];
     if(!leaf) return JSON.stringify({error:'open any markdown note in Obsidian first'});
@@ -154,7 +165,13 @@ if (blocks.length && !args.includes("--no-render")) {
   try {
     const raw = execFileSync(cli, [`vault=${VAULT}`, "eval", `code=${js}`], { encoding: "utf8", timeout: 60000 });
     const json = raw.replace(/^=>\s*/, "").trim();
-    const res = JSON.parse(json);
+    let res;
+    try {
+      res = JSON.parse(json);
+    } catch {
+      // e.g. "Command line interface is not enabled" when the CLI setting is off
+      throw new Error(json.split("\n")[0] || "no output from the Obsidian CLI");
+    }
     if (res.error) throw new Error(res.error);
     res.forEach((r, i) => {
       const b = blocks[i];

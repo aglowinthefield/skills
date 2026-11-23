@@ -9,7 +9,7 @@ A vault note is read in a pane, often days later, by someone who wants the shape
 
 ## Where notes go
 
-- The vault is `$DEV_VAULT`, else `~/Documents/somewhere.garden`. Each project has a top-level folder. Silk work goes under `Silk/<topic>/` and other projects under `<project>/`. Name the file for its content (`CI scripts audit.md`). Never use `/tmp`, except for scratch data like query output and logs.
+- The vault is `$DEV_VAULT`, else `~/Documents/somewhere.garden` (`~/OneDrive/Documents/somewhere.garden` on Windows). Each project has a top-level folder. Silk work goes under `Silk/<topic>/` and other projects under `<project>/`. Name the file for its content (`CI scripts audit.md`). Never use `/tmp`, except for scratch data like query output and logs.
 - The filename is the title. Never start a note with an H1. Begin with frontmatter, then the lead or an `##`.
 - Frontmatter must be valid YAML. Write lists as `- item` lines. A wikilink is the whole value of its own property (`superseded-by: "[[Note]]"`), never mixed into prose.
 - Set `status: needs-review` and `date: YYYY-MM-DD`. Tell the user the path, and wait for their review before acting on the note.
@@ -75,6 +75,6 @@ Recipes and the theme-safe colour classes are in [references/diagrams.md](refere
 node ~/.agents/skills/vault-writing/scripts/check-note.mjs <note.md | report.html>
 ```
 
-The checker flags sections over the prose budget, long table cells, and every diagram that fails to render or is too wide for a pane (over 1,100 px, where its text shrinks). Markdown blocks render in the running Obsidian app. For vault-report, check the HTML source before export, then the exported note after, which catches wide rendered diagrams. The checker exits 1 on any hit. If Obsidian isn't running, it skips rendering and says so. To see the note, use `obsidian-cli open` as the vault-report skill describes.
+The checker flags sections over the prose budget, long table cells, and every diagram that fails to render or is too wide for a pane (over 1,100 px, where its text shrinks). Markdown blocks render in the running Obsidian app. For vault-report, check the HTML source before export, then the exported note after, which catches wide rendered diagrams. The checker exits 1 on any hit. If Obsidian isn't running or its CLI is off, it skips rendering and says why. To see the note, use `obsidian-cli open` as the vault-report skill describes.
 
 For a before and after of a real audit, see [references/example.md](references/example.md).

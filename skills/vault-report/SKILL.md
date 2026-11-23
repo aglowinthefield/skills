@@ -23,17 +23,17 @@ node ~/.agents/skills/vault-report/scripts/vault-report.mjs <report.html> \
   --dest "<folder inside the vault>" --name "<index note name>" [--date YYYY-MM-DD]
 ```
 
-- The vault is `$DEV_VAULT` (else `~/Documents/somewhere.garden`); `--vault` overrides. Put the folder where the vault-writing skill says, such as `Silk/<topic>/`. Notes get `status: needs-review`, `date`, and a `report:` link to the index; `--status` changes the first.
+- The vault is `$DEV_VAULT` (else `~/Documents/somewhere.garden`, or `~/OneDrive/Documents/somewhere.garden` on Windows); `--vault` overrides. Put the folder where the vault-writing skill says, such as `Silk/<topic>/`. Notes get `status: needs-review`, `date`, and a `report:` link to the index; `--status` changes the first.
 - It refuses to overwrite existing notes. Check them for the user's annotations first (`rg -n '%%|\{>>' <folder>`); if there are none, rerun with `--force`. Notes in the folder that this export didn't write are listed, never deleted.
 - `--rebuild` regenerates the snippet only: after deleting a report folder, or after changing the colour roles in `scripts/palette.mjs`.
-- Needs Chrome (Playwright's cached Chromium, or `$CHROME`) and network for Mermaid. The first run installs Tailwind 3 and PostCSS into `~/.cache/vault-report`.
+- Needs Chrome (Playwright's cached Chromium, an installed Chrome, Edge on Windows, or `$CHROME`) and network for Mermaid. The first run installs Tailwind 3 and PostCSS into `~/.cache/vault-report`.
 - A render error (bad Mermaid, duplicate note names) stops the export before anything is written.
 
 Tell the user the index note's path when done.
 
 ## Checking the result
 
-Obsidian reloads the snippet itself. To look without screenshots, open the note with `/Applications/Obsidian.app/Contents/MacOS/obsidian-cli open vault=<name> path="<folder>/<note>.md"`. When the Obsidian window is hidden its reading view never renders, so an `eval` against the active leaf finds nothing. Render into a detached element instead: walk the prototype chain of `app.workspace.activeLeaf.view.previewMode` to the constructor that has a static `render`, call `render(app, markdown, el, path, view)` on an element inside a `.markdown-preview-view.markdown-rendered.vault-report` wrapper, and read computed styles from `.vr-page`. The CLI exits 0 even on errors, so read its output.
+Obsidian reloads the snippet itself. To look without screenshots, open the note with Obsidian's CLI: `/Applications/Obsidian.app/Contents/MacOS/obsidian-cli open vault=<name> path="<folder>/<note>.md"` on macOS, or `%LOCALAPPDATA%ProgramsObsidianObsidian.com` with the same arguments on Windows. The CLI answers only when **Settings → General → Advanced → Command line interface** is on. When the Obsidian window is hidden its reading view never renders, so an `eval` against the active leaf finds nothing. Render into a detached element instead: walk the prototype chain of `app.workspace.activeLeaf.view.previewMode` to the constructor that has a static `render`, call `render(app, markdown, el, path, view)` on an element inside a `.markdown-preview-view.markdown-rendered.vault-report` wrapper, and read computed styles from `.vr-page`. The CLI exits 0 even on errors, so read its output.
 
 ## Why it works the way it does
 
