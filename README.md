@@ -68,7 +68,7 @@ The agent uses it whenever it writes a note in an Obsidian vault. The note leads
 
 `scripts/check-note.mjs` enforces the rules. It flags any section with more than 150 words of prose and no picture, and any table cell over 20 words. It renders every Mermaid block in the running Obsidian app and reports parse errors and diagrams too wide for a pane. A section can opt out with `%% text-only: <reason> %%`.
 
-For a before and after, see [references/example.md](skills/vault-writing/references/example.md). It shows a section of a real CI audit as prose and then redrawn, and GitHub renders the diagram.
+For a before and after, see [references/example.md](skills/vault-writing/references/example.md). It takes a prose-heavy note about a made-up export job and redraws it section by section as a flowchart, a cleaned-up table, a state diagram, a bar chart, and a decision table with a quadrant chart. GitHub renders the diagrams.
 
 The vault path and the Silk folder layout are specific to my setup. Change them in `SKILL.md` for yours.
 

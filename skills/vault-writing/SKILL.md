@@ -77,4 +77,4 @@ node ~/.agents/skills/vault-writing/scripts/check-note.mjs <note.md | report.htm
 
 The checker flags sections over the prose budget, long table cells, and every diagram that fails to render or is too wide for a pane (over 1,100 px, where its text shrinks). Markdown blocks render in the running Obsidian app. For vault-report, check the HTML source before export, then the exported note after, which catches wide rendered diagrams. The checker exits 1 on any hit. If Obsidian isn't running or its CLI is off, it skips rendering and says why. To see the note, use `obsidian-cli open` as the vault-report skill describes.
 
-For a before and after of a real audit, see [references/example.md](references/example.md).
+For before-and-after pairs of each kind of rewrite (pipeline, table, retry loop, trend, decision), see [references/example.md](references/example.md).
