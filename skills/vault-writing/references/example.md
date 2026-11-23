@@ -1,5 +1,7 @@
 Each section below takes one part of a prose-heavy note about a made-up nightly export job and redraws it. The before is how a first draft tends to read. The after follows SKILL.md, and each pair uses a different kind of picture.
 
+These pairs are samples, not a menu. For each note, pick the picture that best shows its content, using the table in SKILL.md and anything else that fits. That includes sequence diagrams, gantt timelines, sankey charts, and vault-report cards, which don't appear here.
+
 ## A pipeline with a flaw
 
 Before:
