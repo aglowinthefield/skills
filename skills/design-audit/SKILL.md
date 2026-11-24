@@ -71,7 +71,7 @@ Each finding is compared against the state just before it: `base` for the first,
 
 ## 4. Review with Tom
 
-1. Start the review page in the background: `node <skill-dir>/scripts/compare.mjs .design-audit --port 4870`, and open the URL it prints. Use `share-preview` if Tom is reviewing from another machine.
+1. Start the review page in the background: `node <skill-dir>/scripts/compare.mjs .design-audit --port 4870`, and open the URL it prints. When the audit runs on mochi, Tom reviews from another device over Tailscale, so serve it on the tailnet address instead: `--host $(tailscale ip -4)`, and give him `http://mochi:4870/`. Use `share-preview` for anyone outside the tailnet.
 2. Tell Tom how many findings there are and that the page has side-by-side, slider and diff views (diff shows only the pixels that changed). Then wait for him to say he is done.
 3. Read `.design-audit/choices.json`. A note on a finding is a request: change that fix, amend its commit, capture again, and ask him to review that finding again.
 
