@@ -32,7 +32,7 @@ Scripts live in `<skill-dir>/scripts` and run with Node. Audit files go in `.des
 }
 ```
 
-Use `init` when the app keeps its theme in storage instead of following the system. Add a `{ "name": "phone", "width": 390, "height": 844 }` viewport only for surfaces that run on phones, and limit it per screen with `"viewports": ["phone"]`.
+Use `init` when the app keeps its theme in storage instead of following the system. When the theme comes from the server, add a mode `setup` that sets it after load (for example `"setup": "document.documentElement.dataset.theme='light'"`), and check the light screenshots really are light. Add a `{ "name": "phone", "width": 390, "height": 844 }` viewport only for surfaces that run on phones, and limit it per screen with `"viewports": ["phone"]`.
 
 The set-up step is done when `node <skill-dir>/scripts/capture.mjs .design-audit/screens.json .design-audit/shots/base` exits 0 and you have looked at every screenshot it wrote.
 

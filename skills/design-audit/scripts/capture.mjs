@@ -37,6 +37,8 @@ try {
           if (screen.waitFor) await page.waitForSelector(screen.waitFor, { timeout: 15000 });
           // `setup` puts the screen into the state under audit: open a dialog, select a card.
           if (screen.setup) await page.evaluate(screen.setup);
+          // A mode's `setup` forces the theme after load, for apps that take it from the server.
+          if (m.setup) await page.evaluate(m.setup);
           if (screen.after) await page.waitForSelector(screen.after, { timeout: 15000 });
           await page.evaluate(() => document.fonts?.ready);
           const file = join(outDir, shotName(screen.name, mode, vp.name));
