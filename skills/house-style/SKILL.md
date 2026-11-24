@@ -37,7 +37,7 @@ Hand off to these skills for depth, keeping this skill's rules on top:
   - section labels like "Overview" or "Details" above self-evident content
 - **Flat structure.** One level of container. Group with spacing, a rule or a heading; a card holds content, never other cards.
 - **Labels in sentence case** at every size. Emphasis comes from weight or colour.
-- **Motion smooths.** It exists where a flicker or a pop would otherwise happen: something appearing, leaving, resizing, reordering, changing state. It answers the user's input, runs 120 to 200 ms, uses a spring or ease-out curve, and turns off under `prefers-reduced-motion`. Page navigation is instant. A status change made by the system gets a background tint that fades over about 600 ms.
+- **Motion smooths.** It exists where a flicker or a pop would otherwise happen: something appearing, leaving, resizing, reordering, changing state. It answers the user's input, runs 120 to 200 ms, uses a spring or ease-out curve, and turns off under `prefers-reduced-motion`. Page navigation is instant. A status change made by the system gets a background tint that fades over about 600 ms. Live progress (work running, waiting on someone) may loop, like a spinner, slowly and quietly; under reduced motion it becomes a static mark.
 - **Icons with words.** Lucide icons, each beside a text label. An icon stands alone only in a toolbar where it has a tooltip and a keyboard shortcut.
 
 ## Surfaces

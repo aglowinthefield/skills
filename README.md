@@ -5,6 +5,7 @@ Agent skills by aglowinthefield, in plain [Agent Skills](https://agentskills.io)
 | Skill | What it does |
 | --- | --- |
 | [`data-hygiene`](skills/data-hygiene/SKILL.md) | Hunts stored data that breaks a rule the code assumes (unfinished backfills, rules defined twice, writes that skip the normalizer, collation traps, stale readers, identity twins), measures each on real data, and drafts one issue per finding. |
+| [`design-audit`](skills/design-audit/SKILL.md) | Audits an existing app against house-style and its DESIGN.md, fixes each finding as its own commit, and serves a before/after review page (side by side, slider, pixel diff, dark and light) where you keep or drop each fix. |
 | [`house-style`](skills/house-style/SKILL.md) | Tom's taste for every UI: colour as meaning, dark and light, dense tools, motion that smooths, text that informs. Ships a font library, a colour guide drawn from the editor-theme tradition (Compline, Everforest, Gruvbox, Base16), a contrast checker, and the DESIGN.md routine for each repo. |
 | [`nitpick`](skills/nitpick/SKILL.md) | Loads a page or component into a hot-reloading preview, then treats each message as one small design tweak, one commit per tweak. |
 | [`walk`](skills/walk/SKILL.md) | Walks a list of action items one at a time instead of ending a reply with nine bullets. Each item ends as do now, fork, defer, or drop. |
@@ -31,7 +32,7 @@ Or clone and symlink:
 
 ```bash
 git clone git@github.com:aglowinthefield/skills.git ~/code/skills
-for s in data-hygiene house-style nitpick vault-report vault-writing walk wrap-up ykwim; do ln -s ~/code/skills/skills/$s ~/.agents/skills/$s; done
+for s in data-hygiene design-audit house-style nitpick vault-report vault-writing walk wrap-up ykwim; do ln -s ~/code/skills/skills/$s ~/.agents/skills/$s; done
 ```
 
 ## nitpick
