@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Serve the before/after review page for an audit and record the keep/drop choices.
-// Usage: compare.mjs <audit-dir> [--port 4870]
+// Usage: compare.mjs <audit-dir> [--port 4870] [--host 127.0.0.1]
 // Reads <audit-dir>/findings.json and <audit-dir>/shots/<state>/*.png.
 // Finding N is compared against the state before it: `base` for the first, the previous finding after that.
 // Saving writes <audit-dir>/choices.json: { kept: [id], dropped: [id], notes: { id: text } }.
@@ -9,9 +9,12 @@ import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { extname, join, normalize, resolve } from 'node:path';
 
 const args = process.argv.slice(2);
-const dir = resolve(args.find((a) => !a.startsWith('--')) ?? '.design-audit');
+const dir = resolve(args.find((a, i) => !a.startsWith('--') && !['--port', '--host'].includes(args[i - 1])) ?? '.design-audit');
 const portArg = args.indexOf('--port');
 const port = portArg >= 0 ? Number(args[portArg + 1]) : 4870;
+// --host 100.x.y.z serves on a tailnet address for review from another machine.
+const hostArg = args.indexOf('--host');
+const host = hostArg >= 0 ? args[hostArg + 1] : '127.0.0.1';
 const findingsPath = join(dir, 'findings.json');
 if (!existsSync(findingsPath)) {
   console.error(`no findings.json in ${dir}`);
@@ -173,4 +176,4 @@ createServer((req, res) => {
     return;
   }
   res.writeHead(200, { 'content-type': types[extname(file)] ?? 'application/octet-stream' }).end(readFileSync(file));
-}).listen(port, '127.0.0.1', () => console.log(`http://127.0.0.1:${port}/`));
+}).listen(port, host, () => console.log(`http://${host}:${port}/`));
