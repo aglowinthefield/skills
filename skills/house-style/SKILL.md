@@ -52,7 +52,7 @@ Apps used to get work done: Bakery, dashboards, admin screens, desktop apps.
 - `tabular-nums` on numeric columns; monospace for IDs, hashes, paths and timestamps.
 - Every primary action has a keyboard shortcut, shown in its tooltip or menu item.
 - A Cmd+K command palette belongs in tools Tom fully owns once there are enough commands or objects that menus slow him down. Shared or team repos (silk-remix, for example) follow their own conventions.
-- A density setting (compact, comfortable, cozy) and a theme picker over the library palettes are for tools used all day. Treat the theme picker as a stretch goal.
+- A density setting (compact, comfortable, cozy) and a theme picker are for tools used all day. Treat the theme picker as a stretch goal.
 
 ### Reading sites
 
@@ -68,16 +68,16 @@ Personal pages, notes, catalogues: bookspell is the reference.
 
 ## Library
 
-When a repo has no tokens yet, pick from the library. Go outside it only when Tom asks.
+When a repo has no tokens yet:
 
-- Fonts: [references/fonts.md](references/fonts.md)
-- Palettes: [references/palettes.md](references/palettes.md). The default for a new repo is Compline (dark) with Lauds (light).
+- Fonts: pick from [references/fonts.md](references/fonts.md). Go outside it only when Tom asks.
+- Colour: design the repo's own palette in the tradition described in [references/colour.md](references/colour.md). Its reference themes show the feel; they are not palettes to copy.
 
 ## DESIGN.md
 
 Each repo with UI keeps a `DESIGN.md` in the [Google DESIGN.md format](https://github.com/google-labs-code/design.md): YAML tokens on top, prose on why below.
 
-1. Write the tokens the code actually uses: colours for both modes, fonts, type scale, radius, spacing. Take values from the repo's CSS, or from the library for a new repo.
+1. Write the tokens the code actually uses: colours for both modes, fonts, type scale, radius, spacing. Take values from the repo's CSS, or for a new repo from the fonts library and a palette built in the colour tradition.
 2. Below the tokens, record the decisions this repo makes beyond this skill, and its exceptions to it.
 3. Lint it: `npx -y -p @google/design.md designmd lint DESIGN.md`. Add that command to the repo's local check script. Leave CI out of it while the format is alpha.
 4. Point to it from the repo's `AGENTS.md`: "Treat `DESIGN.md` as the source of truth for visual decisions, and load the `house-style` skill for UI work."
