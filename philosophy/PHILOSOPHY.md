@@ -82,7 +82,7 @@ Holistic tests survive refactors and say what matters. A wall of unit tests burn
 
 **Every unattended tool has `doctor`.** It says what is broken right now and how to fix it, and it's the first command an agent runs when something looks off.
 - `bakery-cli doctor`.
-- UD's `setup-status`, which becomes `unconscious doctor`.
+- UD's `unconscious status`, which becomes `unconscious doctor`.
 
 **Anything that runs while you aren't watching is observable.** That covers services and scheduled jobs alike. The minimum:
 - Prometheus metrics on the project's real units of work.
