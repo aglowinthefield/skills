@@ -31,15 +31,15 @@ Environment
 
 ## Colour
 
-The terminal's 16 ANSI colours, never fixed RGB, so the person's theme picks shades that read on light and dark:
+The terminal's 16 ANSI colours, never fixed RGB, so the person's theme picks shades that read on light and dark. Each tool takes its colours from its banner, so the three share a layout but not a palette:
 
-| Role | Code |
-| --- | --- |
-| Headings | bold magenta `1;35` |
-| Command names | magenta `35` |
-| Arguments, flags, env names | yellow `33` |
-| Comments, versions, `$` | dim `2` |
-| ok / warn / bad / info | green / yellow / red / cyan |
+| Tool | Headings | Command names | Arguments, flags, env names |
+| --- | --- | --- | --- |
+| `bakery-cli` (the crust) | bold yellow `1;33` | yellow `33` | dim `2` |
+| `impression` (the cloud) | bold cyan `1;36` | plain | blue `34` |
+| `unconscious` (the cards) | bold magenta `1;35` | magenta `35` | yellow `33` |
+
+A new tool picks one accent from its banner for headings and command names, and dims its arguments. Keep red off headings: it reads as an error. Comments, versions and the `$` in examples are dim `2`; ok, warn, bad and info are green, yellow, red and cyan. In `cli-help.ts` the colours are the `colors` field of the tool's `CliHelp`.
 
 Layout and colour only on a terminal: piped output stays plain, so agents and scripts read it cleanly. `NO_COLOR` drops colour and keeps the layout; `FORCE_COLOR` wins over both (`FORCE_COLOR=0` turns everything off).
 
