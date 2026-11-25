@@ -1,6 +1,6 @@
 ---
 name: house-style
-description: Tom's house style for every UI. Use when building, restyling, reviewing or polishing an interface, choosing fonts or colours, or writing a repo's DESIGN.md. Load it before any other design skill; it wins where they disagree.
+description: Tom's house style for every UI, terminal CLIs included. Use when building, restyling, reviewing or polishing an interface or a CLI's help and output, choosing fonts or colours, or writing a repo's DESIGN.md. Load it before any other design skill; it wins where they disagree.
 ---
 
 # House style
@@ -60,6 +60,10 @@ Personal pages, notes, catalogues: bookspell is the reference.
 
 - A narrow column under 75 characters, visible underlined links, plain rules.
 - Type on the Perfect Fourth scale (1.333) from a 16px body. Serif body text gets slightly more line height.
+
+### Command-line tools
+
+`bakery-cli`, `unconscious` and `impression` share one help layout, colour roles, banner style and error format. Follow [references/cli.md](references/cli.md) for any CLI's help or output, and start from its [cli-help.ts](references/cli-help.ts).
 
 ### Landing pages
 
