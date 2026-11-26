@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# Read-only SQL over the local Paprika library, through views with plain column names.
+# Usage: paprika-sql [sqlite3 flags] "SQL"     e.g. paprika-sql -json "select name from recipes"
+#        paprika-sql --path                    print the data folder
+set -euo pipefail
+
+data=${PAPRIKA_DATA:-}
+if [[ -z $data ]]; then
+  for d in "$HOME"/Library/Group\ Containers/*.com.hindsightlabs.paprika.mac.v*/Data; do
+    [[ -f $d/Database/Paprika.sqlite ]] && data=$d
+  done
+fi
+if [[ -z $data || ! -f $data/Database/Paprika.sqlite ]]; then
+  echo "paprika-sql: no Paprika library found. Set PAPRIKA_DATA to the folder holding Database/Paprika.sqlite." >&2
+  exit 1
+fi
+if [[ ${1:-} == --path ]]; then echo "$data"; exit 0; fi
+if [[ $# -eq 0 || ${1:-} == -h || ${1:-} == --help ]]; then
+  sed -n '2,4p' "$0" | sed 's/^# //'; exit 0
+fi
+
+db="file:$data/Database/Paprika.sqlite?mode=ro"
+# A read-only connection can't create the WAL index. Without one, Paprika isn't writing, so read the file as is.
+[[ -f $data/Database/Paprika.sqlite-shm ]] || db+="&immutable=1"
+q() { sqlite3 -readonly "$db" "$1"; }
+
+# Core Data names join tables after entity numbers, which can shift between app versions.
+r=$(q "select Z_ENT from Z_PRIMARYKEY where Z_NAME = 'Recipe'")
+c=$(q "select Z_ENT from Z_PRIMARYKEY where Z_NAME = 'RecipeCategory'")
+photos=${data//\'/\'\'}/Photos
+day="'unixepoch', 'localtime'"   # Core Data stores seconds since 2001-01-01 UTC
+epoch=978307200
+
+views="
+create temp view recipes as
+select r.ZUID uid, r.ZNAME name, r.ZRATING rating, r.ZONFAVORITES favorite, r.ZISPINNED pinned,
+  (select group_concat(k.ZNAME, ', ') from Z_${r}CATEGORIES j join ZRECIPECATEGORY k on k.Z_PK = j.Z_${c}CATEGORIES
+     where j.Z_${r}RECIPES = r.Z_PK) categories,
+  r.ZSERVINGS servings, r.ZPREPTIME prep_time, r.ZCOOKTIME cook_time, r.ZTOTALTIME total_time,
+  r.ZDIFFICULTY difficulty, r.ZSOURCE source, r.ZSOURCEURL source_url, r.ZDESCRIPTIONTEXT description,
+  r.ZINGREDIENTS ingredients, r.ZDIRECTIONS directions, r.ZNOTES notes, r.ZNUTRITIONALINFO nutrition,
+  case when r.ZPHOTO is not null then '$photos/' || r.ZUID || '/' || r.ZPHOTO end photo_path,
+  r.ZIMAGEURL image_url, datetime(r.ZCREATED + $epoch, $day) created
+from ZRECIPE r where r.ZINTRASH = 0;
+
+create temp view ingredients as
+with recursive split(uid, recipe, n, line, rest) as (
+  select ZUID, ZNAME, 0, null, coalesce(ZINGREDIENTS, '') || char(10) from ZRECIPE where ZINTRASH = 0
+  union all
+  select uid, recipe, n + 1, trim(substr(rest, 1, instr(rest, char(10)) - 1)), substr(rest, instr(rest, char(10)) + 1)
+  from split where rest <> '')
+select uid recipe_uid, recipe, n, line from split where n > 0 and line <> '';
+
+create temp view categories as
+select k.ZNAME name, p.ZNAME parent,
+  (select count(*) from Z_${r}CATEGORIES j join ZRECIPE r on r.Z_PK = j.Z_${r}RECIPES
+     where j.Z_${c}CATEGORIES = k.Z_PK and r.ZINTRASH = 0) recipe_count
+from ZRECIPECATEGORY k left join ZRECIPECATEGORY p on p.Z_PK = k.ZPARENT;
+
+create temp view meals as
+select date(m.ZDATE + $epoch, $day) date, t.ZNAME meal_type, m.ZNAME name,
+  r.ZUID recipe_uid, m.ZSCALE scale
+from ZMEAL m left join ZMEALTYPE t on t.Z_PK = m.ZTYPE left join ZRECIPE r on r.Z_PK = m.ZRECIPE;
+
+create temp view menus as
+select n.ZNAME menu, n.ZNOTES notes, i.ZDAY day, t.ZNAME meal_type, i.ZNAME name,
+  r.ZUID recipe_uid, i.ZSCALE scale
+from ZMENUITEM i join ZMENU n on n.Z_PK = i.ZMENU
+  left join ZMEALTYPE t on t.Z_PK = i.ZTYPE left join ZRECIPE r on r.Z_PK = i.ZRECIPE;
+
+create temp view groceries as
+select l.ZNAME list, g.ZAISLENAME aisle, g.ZNAME name, g.ZINGREDIENT ingredient, g.ZQUANTITY quantity,
+  g.ZRECIPENAME recipe, g.ZPURCHASED purchased
+from ZGROCERYITEM g left join ZGROCERYLIST l on l.Z_PK = g.ZLIST;
+
+create temp view pantry as
+select p.ZINGREDIENT ingredient, p.ZQUANTITY quantity, p.ZAISLENAME aisle, l.ZNAME location,
+  p.ZINSTOCK in_stock, p.ZNOTES notes,
+  case when p.ZHASEXPIRATION = 1 then date(p.ZEXPIRATIONDATE + $epoch, $day) end expires,
+  date(p.ZPURCHASEDATE + $epoch, $day) purchased
+from ZPANTRYITEM p left join ZPANTRYLOCATION l on l.Z_PK = p.ZLOCATION;
+"
+
+# Guard: if a Paprika update renamed a table or column, stop here and say so.
+check="select 1 from recipes, ingredients, categories, meals, menus, groceries, pantry limit 0;"
+if ! err=$(sqlite3 -readonly -cmd "$views" "$db" "$check" 2>&1 >/dev/null) || [[ -n $err ]]; then
+  echo "paprika-sql: Paprika's schema no longer matches these views (${err:-missing entity}). Update the views in $0." >&2
+  exit 2
+fi
+
+sql=${*: -1}
+flags=("${@:1:$#-1}")
+exec sqlite3 -readonly ${flags[@]+"${flags[@]}"} -cmd "$views" "$db" "$sql"

@@ -8,6 +8,7 @@ Agent skills by aglowinthefield, in plain [Agent Skills](https://agentskills.io)
 | [`design-audit`](skills/design-audit/SKILL.md) | Audits an existing app against house-style and its DESIGN.md, fixes each finding as its own commit, and serves a before/after review page (side by side, slider, pixel diff, dark and light) where you keep or drop each fix. |
 | [`house-style`](skills/house-style/SKILL.md) | Tom's taste for every UI: colour as meaning, dark and light, dense tools, motion that smooths, text that informs. Ships a font library, a colour guide drawn from the editor-theme tradition (Compline, Everforest, Gruvbox, Base16), a contrast checker, the DESIGN.md routine for each repo, and a shared help layout for terminal CLIs. |
 | [`nitpick`](skills/nitpick/SKILL.md) | Loads a page or component into a hot-reloading preview, then treats each message as one small design tweak, one commit per tweak. |
+| [`paprika`](skills/paprika/SKILL.md) | Reads recipes, ingredients, meal plans, menus, the grocery list, and the pantry from the local Paprika Recipe Manager library on macOS. A read-only SQL script adds plain views over Paprika's Core Data tables and stops with a clear error if an app update changes them. |
 | [`walk`](skills/walk/SKILL.md) | Walks a list of action items one at a time instead of ending a reply with nine bullets. Each item ends as do now, fork, defer, or drop. |
 | [`ykwim`](skills/ykwim/SKILL.md) | End a request with "ykwim?" and the agent restates what it thinks you mean, lists ambiguities with a recommended answer for each, and waits for your go-ahead. |
 | [`vault-report`](skills/vault-report/SKILL.md) | Exports a Tailwind + Mermaid HTML report into an Obsidian vault as themed notes, one per section plus an index. vault-writing uses it for reports. |
@@ -32,7 +33,7 @@ Or clone and symlink:
 
 ```bash
 git clone git@github.com:aglowinthefield/skills.git ~/code/skills
-for s in data-hygiene design-audit house-style nitpick vault-report vault-writing walk wrap-up ykwim; do ln -s ~/code/skills/skills/$s ~/.agents/skills/$s; done
+for s in data-hygiene design-audit house-style nitpick paprika vault-report vault-writing walk wrap-up ykwim; do ln -s ~/code/skills/skills/$s ~/.agents/skills/$s; done
 ```
 
 ## nitpick
