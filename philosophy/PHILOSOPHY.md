@@ -54,6 +54,10 @@ Holistic tests survive refactors and say what matters. A wall of unit tests burn
 - Bakery tests its UI through Playwright and its server through its HTTP API.
 - Bakery unit-tests its reviewer verdict parser, which has many malformed-input cases.
 
+**Lifecycles are named state machines.** A lifecycle with more than two phases, or a phase that crosses an await, timer, retry or another owner, is an enum of states with one transition function, not flags and status strings. Its rules, what must never happen and what must eventually happen, are written apart from the code. A lifecycle with concurrent callers or retries has those rules model-checked before a fix is trusted. A two-phase flag with one owner stays a flag.
+- coda's `WantedState` owns every value of `wanted.state`, records each transition with a reason, and a test proves every state is reachable.
+- mu's `StartPhase.derive` decides why a start isn't heard yet from one pure rule instead of loading and buffering flags.
+
 **Every behaviour change carries a test.**
 - Bakery's README requires a regression test for each changed behaviour.
 
