@@ -59,7 +59,7 @@ Then write `.design-audit/findings.json`:
 
 ```json
 {
-  "repo": "bakery",
+  "repo": "alice",
   "base": "<sha of main>",
   "findings": [
     { "id": "f1", "title": "Raise 10px labels to 11px", "rule": "DESIGN.md: 11px minimum", "why": "Lane counts are hard to read in compact density.", "commit": "<sha>", "screens": ["board"] }

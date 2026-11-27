@@ -44,7 +44,7 @@ Hand off to these skills for depth, keeping this skill's rules on top:
 
 ### Tools
 
-Apps used to get work done: Bakery, dashboards, admin screens, desktop apps.
+Apps used to get work done: Alice, dashboards, admin screens, desktop apps.
 
 - Compact by default on a 4px grid. Rows 28 to 36px. Padding sized for a desktop screen.
 - Sidebar type is fixed at 13px with 11px metadata, like Linear and macOS sidebars.
@@ -63,7 +63,7 @@ Personal pages, notes, catalogues: bookspell is the reference.
 
 ### Command-line tools
 
-`bakery-cli`, `unconscious` and `impression` share one help layout, colour roles, banner style and error format. Follow [references/cli.md](references/cli.md) for any CLI's help or output, and start from its [cli-help.ts](references/cli-help.ts).
+`alice`, `unconscious` and `impression` share one help layout, colour roles, banner style and error format. Follow [references/cli.md](references/cli.md) for any CLI's help or output, and start from its [cli-help.ts](references/cli-help.ts).
 
 ### Landing pages
 

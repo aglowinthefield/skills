@@ -1,6 +1,6 @@
 # Command-line tools
 
-The help and output of Tom's CLIs: `bakery-cli`, `unconscious` and `impression` share one layout, so they look like a set. Copy [cli-help.ts](cli-help.ts) into the repo (it has no dependencies) and keep the tool's own commands in a registry next to it. Each tool keeps its copy; there is no shared package.
+The help and output of Tom's CLIs: `alice`, `unconscious` and `impression` share one layout, so they look like a set. Copy [cli-help.ts](cli-help.ts) into the repo (it has no dependencies) and keep the tool's own commands in a registry next to it. Each tool keeps its copy; there is no shared package.
 
 ## Help
 
@@ -35,7 +35,7 @@ The terminal's 16 ANSI colours, never fixed RGB, so the person's theme picks sha
 
 | Tool | Headings | Command names | Arguments, flags, env names |
 | --- | --- | --- | --- |
-| `bakery-cli` (the crust) | bold yellow `1;33` | yellow `33` | dim `2` |
+| `alice` (the crust) | bold yellow `1;33` | yellow `33` | dim `2` |
 | `impression` (the cloud) | bold cyan `1;36` | plain | blue `34` |
 | `unconscious` (the cards) | bold magenta `1;35` | magenta `35` | yellow `33` |
 
@@ -45,7 +45,7 @@ Layout and colour only on a terminal: piped output stays plain, so agents and sc
 
 ## Banner
 
-The overview opens with a small piece of art on a terminal: 4 to 10 rows, drawn from the tool's identity (Bakery's braille cake, Unconscious Development's tarot cards, Impression's braille cloud), shaded top to bottom in a few related colours. Beside it: the name letter-spaced in bold (`b a k e r y`), a one-sentence tagline, the version dimmed. Braille line art reads finer than block characters; draw it from a shape in code rather than by hand. Pipes and `--help` captured by an agent get no banner.
+The overview opens with a small piece of art on a terminal: 4 to 10 rows, drawn from the tool's identity (Alice's braille cake, Unconscious Development's tarot cards, Impression's braille cloud), shaded top to bottom in a few related colours. Beside it: the name letter-spaced in bold (`a l i c e`), a one-sentence tagline, the version dimmed. Braille line art reads finer than block characters; draw it from a shape in code rather than by hand. Pipes and `--help` captured by an agent get no banner.
 
 ## Errors
 
@@ -55,7 +55,7 @@ The overview opens with a small piece of art on a terminal: 4 to 10 rows, drawn 
 
 ## Output
 
-Lists print one item per line, tab-separated when piped. On a terminal the same lines are laid out in aligned columns, with status words in their colour (Bakery's `layout()` in `scripts/cli-style.mjs`). `--json` prints the full data for scripts.
+Lists print one item per line, tab-separated when piped. On a terminal the same lines are laid out in aligned columns, with status words in their colour (Alice's `layout()` in `scripts/cli-style.mjs`). `--json` prints the full data for scripts.
 
 ## Parsing
 

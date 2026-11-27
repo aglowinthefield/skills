@@ -4,7 +4,7 @@ Pick one family, or two that differ clearly (a sans for UI and a serif for readi
 
 | Font | Use it for | Stack |
 | --- | --- | --- |
-| Inter | Tools and dense UI. Neutral, legible at 11 to 14px, has tabular figures. Bakery and Silk use it. | `Inter, ui-sans-serif, system-ui, sans-serif` |
+| Inter | Tools and dense UI. Neutral, legible at 11 to 14px, has tabular figures. Alice and Silk use it. | `Inter, ui-sans-serif, system-ui, sans-serif` |
 | Instrument Sans | Tools or sites that want a little more warmth than Inter. coda uses it. | `"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif` |
 | IBM Plex Sans | Technical tools with a mechanical, engineered tone. Pairs with IBM Plex Mono. impression uses it. | `"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif` |
 | Georgia | Reading sites and display headings. Already on every system, no font loading. bookspell uses it. | `Georgia, "Times New Roman", serif` |
