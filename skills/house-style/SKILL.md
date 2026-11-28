@@ -7,6 +7,10 @@ description: Tom's house style for every UI, terminal CLIs included. Use when bu
 
 Quiet, dense, legible software in the tradition of Linear, native macOS apps (Mail, Finder, Notes) and GitHub's code views, drawn by hand on top: ink for the software, blue pen for the app's own voice, after two illustrators. See [references/illustration.md](references/illustration.md). Every element earns its place: colour carries meaning, motion smooths, text informs.
 
+## The hub
+
+[hub/index.html](hub/index.html) shows every principle, token and component in light and dark, with the Alice Today mockup as the reference build. Its values live in [hub/tokens.css](hub/tokens.css). Open it before styling, and update it in the same change when a rule here changes. Serve it over HTTP (`python3 -m http.server` in this directory, then open `/hub/`), since `file://` blocks the line-art mask.
+
 ## Order of authority
 
 1. The repo's `DESIGN.md` holds the concrete tokens: fonts, palette, radius, spacing. It wins on values.

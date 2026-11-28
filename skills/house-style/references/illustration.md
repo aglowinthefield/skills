@@ -1,6 +1,6 @@
 # Drawn hand
 
-Tom's software borrows hierarchy and a drawn hand from two illustrators, [izm_ni](https://x.com/izm_ni) (his favourite) and [mmqz8](https://x.com/mmqz8), with Alice's Today page as the reference build. Take their hierarchy and hand, not their characters.
+Tom's software borrows hierarchy and a drawn hand from two illustrators, [izm_ni](https://x.com/izm_ni) (his favourite) and [mmqz8](https://x.com/mmqz8), with Alice's Today page as the reference build ([hub/alice-today.html](../hub/alice-today.html)). Take their hierarchy and hand, not their characters.
 
 ## What they do
 

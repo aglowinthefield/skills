@@ -1,0 +1,80 @@
+/* Ink and pen tokens. A repo copies these into its own DESIGN.md and CSS; the hub and the Alice mockup read them from here. */
+@import url("https://fonts.googleapis.com/css2?family=Rampart+One&family=Hachi+Maru+Pop&family=Inter:wght@400;500;600&display=swap");
+
+.light, :root {
+  --paper: #F8F8F7;
+  --raised: #FFFFFF;
+  --ink: #151417;
+  --muted: #5D5966;
+  --faint: #8E8A96;
+  --hair: #C9C6CE;
+  --line: #151417;
+  --pen: #3049B8;
+  --pen-wash: rgba(48, 73, 184, 0.08);
+  --status-triage: #626B72;
+  --status-ready: #554B36;
+  --status-running: #45627C;
+  --status-review: #38684A;
+  --status-failed: #9D3038;
+  --status-interrupted: #926621;
+  --status-done: #626B72;
+  --status-archived: #5E5675;
+  color-scheme: light;
+}
+
+.dark {
+  --paper: #121214;
+  --raised: #1B1B1F;
+  --ink: #EEEDF0;
+  --muted: #A6A3B0;
+  --faint: #77737F;
+  --hair: #38373E;
+  --line: #EEEDF0;
+  --pen: #8C9BEA;
+  --pen-wash: rgba(140, 155, 234, 0.1);
+  --status-triage: #8B919A;
+  --status-ready: #D4CCB4;
+  --status-running: #B4BCC4;
+  --status-review: #B8C4B8;
+  --status-failed: #CDACAC;
+  --status-interrupted: #C6AD89;
+  --status-done: #9AA59D;
+  --status-archived: #ABA5BD;
+  color-scheme: dark;
+}
+
+:root {
+  --font-ui: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: "Rampart One", ui-sans-serif, system-ui, sans-serif;
+  --font-pen: "Hachi Maru Pop", cursive;
+  --radius: 3px;
+  --unit: 4px;
+}
+
+.mono { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+.pen-hand { font-family: var(--font-pen); color: var(--pen); }
+.display { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; }
+svg.pen { color: var(--pen); }
+svg.pen path, svg.pen ellipse { fill: none; stroke: var(--pen); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Controls */
+.btn { white-space: nowrap; font: 500 13px/1 var(--font-ui); color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 7px 12px; cursor: pointer; transition: background 120ms ease-out, color 120ms ease-out, transform 120ms ease-out, box-shadow 120ms ease-out; }
+.btn:hover, .btn.is-hover { background: var(--ink); color: var(--paper); }
+.btn:focus-visible, .btn.is-focus { outline: 2px solid var(--pen); outline-offset: 2px; }
+.btn:active, .btn.is-pressed { transform: translate(2px, 2px); box-shadow: none; }
+.btn:disabled, .btn.is-disabled { color: var(--muted); border-style: dashed; border-color: var(--faint); background: var(--paper); cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-primary { background: var(--ink); color: var(--paper); box-shadow: 2px 2px 0 var(--pen); }
+.btn-primary:hover, .btn-primary.is-hover { background: var(--ink); color: var(--paper); box-shadow: 3px 3px 0 var(--pen); }
+.btn-row { box-shadow: 2px 2px 0 var(--ink); }
+.btn-text { border-color: transparent; background: none; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--faint); padding-inline: 4px; }
+.btn-text:hover, .btn-text.is-hover { background: none; color: var(--ink); text-decoration-color: var(--ink); }
+.btn-sm { font-size: 12px; padding: 4px 9px; }
+
+.field { font: 14px var(--font-ui); color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 7px 10px; min-width: 0; }
+.field::placeholder { color: var(--muted); }
+.field:focus, .field.is-focus { outline: 2px solid var(--pen); outline-offset: 2px; }
+.field.is-error { border-color: var(--status-failed); }
+.field:disabled { border-style: dashed; border-color: var(--faint); color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } .btn:active, .btn.is-pressed { transform: none; } }
