@@ -7,9 +7,13 @@ description: Tom's house style for every UI, terminal CLIs included. Use when bu
 
 Quiet, dense, legible software in the tradition of Linear, native macOS apps (Mail, Finder, Notes) and GitHub's code views, drawn by hand on top: ink for the software, blue pen for the app's own voice, after two illustrators. See [references/illustration.md](references/illustration.md). Every element earns its place: colour carries meaning, motion smooths, text informs.
 
-## The hub
+## The hub and the registry
 
-[hub/index.html](hub/index.html) shows every principle, token and component in light and dark, with the Alice Today mockup as the reference build. Its values live in [hub/tokens.css](hub/tokens.css). Open it before styling, and update it in the same change when a rule here changes. Serve it over HTTP (`python3 -m http.server` in this directory, then open `/hub/`), since `file://` blocks the line-art mask.
+The parts live in [aglowinthefield/house](https://github.com/aglowinthefield/house). Its hub, https://aglowinthefield.github.io/house/, shows every token and component in light and dark, with Alice's Today page as the reference build. Open it before styling.
+
+- To use the parts in a React app, register `"@house": "https://aglowinthefield.github.io/house/r/{name}.json"` under `registries` in `components.json`, then `npx shadcn add @house/tokens @house/button ...`. The files are copied in; never edit a copy, wrap it.
+- To change a part or a token, change it in `house` (component, hub section and `DESIGN.md` in one PR). Apps pick it up by running `add` again with `--overwrite`.
+- When a rule here changes what a part should look like, update `house` in the same piece of work.
 
 ## Order of authority
 
